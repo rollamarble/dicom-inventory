@@ -1,7 +1,7 @@
 #Inventory script
 # legge il file inventory.properties  nello stesso path dello script (esempio allegato).
 # cerca nel pacs gli esami fatti nell'ultimo giorno e crea un csv con le seguenti informazioni degli esami trovati:
-# "CallingAE","InstitutionName","Manufacturer","StationName","Modality","SOPClassUID"
+# "CallingAE","InstitutionName","Manufacturer","StationName","Modality","SOPClassUID","SoftwareVersions"
 #
 # Operazioni preliminari:
 # install-module Dicom
