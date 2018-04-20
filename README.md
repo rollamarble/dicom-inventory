@@ -1,1 +1,1 @@
-"# dicom-inventory" 
+# dicom-inventory
