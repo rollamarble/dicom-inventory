@@ -1,0 +1,17 @@
+ 
+SELECT distinct 
+ 
+ header->>'InstitutionName' as InstitutionName,
+ header->>'Modality' as Modality,
+ header ->>'Manufacturer' as Manufacturer,
+ header->>'StationName' as StationName, 
+ header ->>'SOPClassUID' as SOPClassUID, 
+ header ->>'SoftwareVersions' as SoftwareVersions ,
+ header ->>'AccessionNumber' as AccessionNumber,
+ to_timestamp(regexp_replace(header ->>'StudyDate', '\D','','g')::numeric/1000) as StudyDate,
+ (report#>'{CTAcquisition,CTDose,DLP,0}'->>'NumericValue')::numeric as DLP,
+ report#>'{CTAcquisition,CTDose,DLP,0,MeasurementUnitsCodeSequence,0,CodeValue}' as MeasurementUnit
+ 
+FROM 
+  public.dicomdata
+  where header->>'Modality' = 'SR' and report->>'CTAcquisition' IS NOT NULL
