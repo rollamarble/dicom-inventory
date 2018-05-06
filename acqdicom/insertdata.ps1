@@ -1,8 +1,6 @@
 
 $conf = Read-Properties $PSScriptRoot\inventory.properties
 
-$DBConnectionString = "Driver={PostgreSQL UNICODE(x64)};Server=localhost;Port=5432;Database=test;Uid=postgres;Pwd=maiocchi;"
-
 $DBConn = New-Object System.Data.Odbc.OdbcConnection
 $DBConn.ConnectionString = $conf.odbc
 
