@@ -11,7 +11,7 @@ $DBCmd = $DBConn.CreateCommand()
 [void]$DBCmd.Parameters.Add("@SopUID", 	 [System.Data.Odbc.OdbcType]::varchar, 100)
 [void]$DBCmd.Parameters.Add("@header", 	 [System.Data.Odbc.OdbcType]::string)
 [void]$DBCmd.Parameters.Add("@report", 	 [System.Data.Odbc.OdbcType]::string)
-$DBCmd.CommandText = "INSERT INTO dicomdata (suid,seriesuid,sopuid,header,report) VALUES (?,?,?,?::JSONB,?::JSONB)"
+$DBCmd.CommandText = "INSERT INTO dicomdata (callingae,suid,seriesuid,sopuid,header,report) VALUES (?,?,?,?,?::JSONB,?::JSONB)"
 $DBCmd.Connection.Open()
 $conf.DBCmd=$DBCmd
 start-dicomserver -Port $conf.port -AET $conf.aet  -Environment $conf  -onCStoreRequest {
@@ -21,10 +21,11 @@ start-dicomserver -Port $conf.port -AET $conf.aet  -Environment $conf  -onCStore
 
 		$header = $file | read-dicom 
 		$header.Modality
-	    $header.Remove('PixelData')
+	    	$header.Remove('PixelData')
 		$headerJSON  = $header   | ConvertTo-JSON -depth 5
-
+	
 	 	$SRJSON = GetConceptValue $header.ContentSequence | ConvertTo-JSON -depth 10
+		$env.DBCmd.Parameters["@CallingAE"]= $association.CallingAE
 		$env.DBCmd.Parameters["@SUID"].Value = $header.StudyInstanceUID
 		$env.DBCmd.Parameters["@SeriesUID"].Value = $header.SeriesInstanceUID
 		$env.DBCmd.Parameters["@SopUID"].Value = $header.SOPInstanceUID
