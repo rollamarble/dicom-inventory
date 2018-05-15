@@ -31,7 +31,7 @@ start-dicomserver -Port $conf.port -AET $conf.aet  -Environment $conf  -onCStore
 		#legge il contenuto dei metadati del filedicom ricevuto e li memorizza nella variabile $attribute
 		$attribute = read-dicom -DicomFile $file
 		#si crea una linea di testo con le informazioni estratte dalla associazione e dal file dicom
-		$NewLine = '"{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}"' -f $association.CallingAE,$attribute.InstitutionName,$attribute.Manufacturer,$attribute.ManufacturerModelName,$attribute.StationName,$attribute.Modality,$attribute.SOPClassUID,$attribute.SoftwareVersions,$attribute.DeviceSerialNumber
+		$NewLine = '"{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}"' -f $association.CallingAE,$attribute.InstitutionName,$attribute.Manufacturer,$attribute.ManufacturerModelName,$attribute.StationName,$attribute.Modality,$attribute.SOPClassUID,$attribute.SoftwareVersions,$attribute.DeviceSerialNumber
 		#si aggiunge la linea al file csv temporaneo
 		$NewLine | add-content -path $env.tempcsv 
 		[Dicom.Network.DicomStatus]::success
