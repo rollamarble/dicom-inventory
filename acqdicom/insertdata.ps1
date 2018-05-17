@@ -6,6 +6,7 @@ $DBConn.ConnectionString = $conf.odbc
 
 $conf.DB = $DBConn
 $DBCmd = $DBConn.CreateCommand()
+[void]$DBCmd.Parameters.Add("@CallingAE" [System.Data.Odbc.OdbcType]::varchar, 50)
 [void]$DBCmd.Parameters.Add("@SUID",  [System.Data.Odbc.OdbcType]::varchar, 100)
 [void]$DBCmd.Parameters.Add("@SeriesUID",  [System.Data.Odbc.OdbcType]::varchar, 100)
 [void]$DBCmd.Parameters.Add("@SopUID", 	 [System.Data.Odbc.OdbcType]::varchar, 100)
