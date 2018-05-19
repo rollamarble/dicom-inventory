@@ -22,6 +22,7 @@ CREATE TABLE public.dicomdata
   sopuid character varying(100) NOT NULL,
   header jsonb,
   report jsonb,
+  callingae character varying(50),
   CONSTRAINT dicomdata_pkey PRIMARY KEY (suid, seriesuid, sopuid)
 )
 WITH (
