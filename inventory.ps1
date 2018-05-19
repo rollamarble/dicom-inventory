@@ -1,7 +1,7 @@
 #Inventory script
 # legge il file inventory.properties  nello stesso path dello script (esempio allegato).
 # cerca nel pacs gli esami fatti nell'ultimo giorno e crea un csv con le seguenti informazioni degli esami trovati:
-# "CallingAE","InstitutionName","Manufacturer","StationName","Modality","SOPClassUID","SoftwareVersions"
+# "CallingAE","InstitutionName","Manufacturer","StationName","Modality","SOPClassUID","SoftwareVersions","DeviceSerialNumber"
 #
 # Operazioni preliminari:
 # install-module Dicom
@@ -17,7 +17,7 @@
 $conf = Read-Properties $PSScriptRoot\inventory.properties
 
 #Crea un file csv vuoto con solo l'intestazione dei campi che verra' utilizzato come datastore temporaneo
-Set-Content -Path $conf.tempcsv -Value '"CallingAE","InstitutionName","Manufacturer","ManufacturerModelName","StationName","Modality","SOPClassUID","SoftwareVersions"'
+Set-Content -Path $conf.tempcsv -Value '"CallingAE","InstitutionName","Manufacturer","ManufacturerModelName","StationName","Modality","SOPClassUID","SoftwareVersions","DeviceSerialNumber"'
 
 #Avvia il dicomserver con le aet e porta lette dalla configurazione, la configurazione $conf viene passato nel environment del servizio
 start-dicomserver -Port $conf.port -AET $conf.aet  -Environment $conf  -onCStoreRequest {
@@ -31,7 +31,7 @@ start-dicomserver -Port $conf.port -AET $conf.aet  -Environment $conf  -onCStore
 		#legge il contenuto dei metadati del filedicom ricevuto e li memorizza nella variabile $attribute
 		$attribute = read-dicom -DicomFile $file
 		#si crea una linea di testo con le informazioni estratte dalla associazione e dal file dicom
-		$NewLine = '"{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}"' -f $association.CallingAE,$attribute.InstitutionName,$attribute.Manufacturer,$attribute.ManufacturerModelName,$attribute.StationName,$attribute.Modality,$attribute.SOPClassUID,$attribute.SoftwareVersions
+		$NewLine = '"{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}"' -f $association.CallingAE,$attribute.InstitutionName,$attribute.Manufacturer,$attribute.ManufacturerModelName,$attribute.StationName,$attribute.Modality,$attribute.SOPClassUID,$attribute.SoftwareVersions,$attribute.DeviceSerialNumber
 		#si aggiunge la linea al file csv temporaneo
 		$NewLine | add-content -path $env.tempcsv 
 		[Dicom.Network.DicomStatus]::success
