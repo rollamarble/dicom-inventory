@@ -32,22 +32,40 @@
 		Function GetConceptValue {
 			param ( $contents ) 
 				$retht= @{}
+			 
+	 
 				foreach ( $content in $contents)  {
+				 
 					switch ($content.ValueType) {
-						CODE { 
-							$retht.Set_Item(($content.ConceptNameCodeSequence.CodeMeaning).replace(' ',''), (GetConceptValue  $content.ContentSequence) )	}
-						CONTAINER { 
-							$retht.Set_Item(($content.ConceptNameCodeSequence.CodeMeaning).replace(' ','') , (GetConceptValue  $content.ContentSequence) )}
-						DATETIME {
-							$retht.Add(($content.ConceptNameCodeSequence.CodeMeaning).replace(' ',''),$content.DateTime)}
-						UIDREF {
-							$retht.Add(($content.ConceptNameCodeSequence.CodeMeaning).replace(' ',''), $content.UID)}
-						TEXT {
-							$retht.Add(($content.ConceptNameCodeSequence.CodeMeaning).replace(' ',''), $content.TextValue)}
-						NUM {
-							$retht.Add( ($content.ConceptNameCodeSequence.CodeMeaning).replace(' ',''), $content.MeasuredValueSequence)}
+						CODE { $codemeaning = ($content.ConceptNameCodeSequence.CodeMeaning).replace(' ','').replace('-','')
+								if ( -Not $retht.containsKey($codemeaning)) {
+									$retht.Set_Item($codemeaning, @())
+								} 
+							foreach ($seq in $content.ConceptCodeSequence) {
+							$retht.Set_Item($codemeaning,$retht.get_item($codemeaning) + $seq.CodeMeaning )}
+							}
+							 
+						CONTAINER { $codemeaning = ($content.ConceptNameCodeSequence.CodeMeaning).replace(' ','').replace('-','')
+										if ( -Not $retht.containsKey($codemeaning)) {
+									$retht.Set_Item($codemeaning, @())
+								} 
+							$retht.Set_Item($codemeaning,$retht.get_item($codemeaning)+(GetConceptValue  $content.ContentSequence) )	}
+							 
+						DATETIME {$codemeaning = ($content.ConceptNameCodeSequence.CodeMeaning).replace(' ','').replace('-','')
+							$retht.Add($codemeaning,$content.DateTime)}
+						UIDREF { $codemeaning = ($content.ConceptNameCodeSequence.CodeMeaning).replace(' ','').replace('-','')
+							$retht.Add($codemeaning, $content.UID)}
+						TEXT { $codemeaning = ($content.ConceptNameCodeSequence.CodeMeaning).replace(' ','').replace('-','')
+							$retht.Add($codemeaning, $content.TextValue)}
+						NUM { $codemeaning = ($content.ConceptNameCodeSequence.CodeMeaning).replace(' ','').replace('-','')
+							$retht.Add($codemeaning, $content.MeasuredValueSequence)}
+						 
 					}
-				}
-				$retht   
-		}			
+				 
+				
+				
+
+		}
+						$retht   
+}		
 			
